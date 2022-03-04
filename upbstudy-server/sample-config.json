@@ -1,0 +1,16 @@
+{
+  "apiHost": "localhost",
+  "apiPort": 8112,
+  "apiKey": "8ae502ea-7f80-4e93-8f35-3e8fd68685b8",
+  "smtpHost": "smtp.gmail.com",
+  "smtpPort": 587,
+  "smtpEmail": "lucaci32u4@google.com",
+  "smtpPassword": "xxumazktvacjjqoc",
+  "emailDestination": "waskaalpha@gmail.com",
+  "emailSubject": "Rezervare loc sala lectura",
+  "emailBody": "Atasez la acest email formularul de rezervare.\n\nMultumesc anticipat,\nAlexandru Iercosan-Lucaci",
+  "attachmentName": "formular_rezervare.docx",
+  "reservationName": "Ionel Popescu",
+  "reservationFaculty": "Automatica si Calculatoare",
+  "reservationPermitNo": "69420666"
+}
