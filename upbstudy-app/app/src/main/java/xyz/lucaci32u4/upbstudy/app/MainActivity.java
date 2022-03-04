@@ -25,7 +25,18 @@ import android.widget.EditText;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -85,8 +96,9 @@ public class MainActivity extends AppCompatActivity {
                                     Snackbar.make(view, "Reservartion send", Snackbar.LENGTH_LONG).show();
                                     finish();
                                 } else {
-                                    Snackbar.make(view, "Failed to send. Error.", Snackbar.LENGTH_LONG).show();
-                                    // todo: launch activity with text
+                                    Intent intent = new Intent(this, ErrorActivity.class);
+                                    intent.putExtra("error", answer);
+                                    startActivity(intent);
                                 }
                             });
                         }).start();
@@ -122,9 +134,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private static String callBackend(String url, String json) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .callTimeout(20, TimeUnit.SECONDS)
+                .build();
 
-
-        return "some-error"; // or null
+        Request request = new Request.Builder()
+                .url(url)
+                .header("Content-Type", "application/json")
+                .post(RequestBody.create(json, MediaType.parse("application/json; charset=utf-8")))
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            int code = response.code();
+            if (code != 200) {
+                ResponseBody rb = response.body();
+                return "Http error. Got code " + code + (rb == null ? "." : " with body:\n" + rb.string());
+            }
+        } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            sw.append("Network error:\n");
+            e.printStackTrace(new PrintWriter(sw));
+            return sw.toString();
+        }
+        return null;
     }
 
 }
